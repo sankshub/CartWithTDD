@@ -2,6 +2,7 @@ package com.sank.bookshop.repos.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sank.bookshop.repos.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -15,11 +16,11 @@ import java.util.List;
 public class BookRepository {
     @Autowired
     private ResourceLoader resourceLoader;
-    public List<String> findAll()  {
+    public List<Book> findAll()  {
         ObjectMapper mapper = new ObjectMapper();
         Resource resource = resourceLoader.getResource("classpath:masterbookfeed.json");
         try (FileReader reader = new FileReader(resource.getFile())) {
-            return mapper.readValue(reader, new TypeReference<List<String>>() {
+            return mapper.readValue(reader, new TypeReference<List<Book>>() {
             });
         } catch (IOException | NullPointerException e) {
             return Collections.emptyList();
