@@ -12,11 +12,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+
 @Component
 public class BookRepository {
     @Autowired
     private ResourceLoader resourceLoader;
-    public List<Book> findAll()  {
+
+    public List<Book> findAll() {
         ObjectMapper mapper = new ObjectMapper();
         Resource resource = resourceLoader.getResource("classpath:masterbookfeed.json");
         try (FileReader reader = new FileReader(resource.getFile())) {

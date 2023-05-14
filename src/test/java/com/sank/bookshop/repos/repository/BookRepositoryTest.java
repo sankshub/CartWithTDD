@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 import static org.mockito.Mockito.when;
 
@@ -54,9 +55,9 @@ public class BookRepositoryTest {
     @Test
     public void testReadAJsonFile() throws IOException, URISyntaxException {
         when(resourceLoader.getResource(Mockito.anyString())).thenReturn(resource);
-        when(resource.getFile()).thenReturn(new File(this.getClass()
-                                                         .getResource("/masterbookfeed.json")
-                                                         .toURI()));
+        when(resource.getFile()).thenReturn(new File(Objects.requireNonNull(this.getClass()
+                                                                                .getResource("/masterbookfeed.json"))
+                                                            .toURI()));
         Assert.assertFalse(CollectionUtils.isEmpty(bookRepository.findAll()));
     }
 
@@ -70,10 +71,9 @@ public class BookRepositoryTest {
     @Test
     public void testReturnsBookList() throws IOException, URISyntaxException {
         when(resourceLoader.getResource(Mockito.anyString())).thenReturn(resource);
-        when(resource.getFile()).thenReturn(new File(this.getClass()
-                                                         .getResource("/masterbookfeed.json")
-                                                         .toURI()));
-        Assert.assertTrue(bookRepository.findAll()
-                                        .contains(book));
+        when(resource.getFile()).thenReturn(new File(Objects.requireNonNull(this.getClass()
+                                                                                .getResource("/masterbookfeed.json"))
+                                                            .toURI()));
+        Assert.assertTrue(bookRepository.findAll().contains(book));
     }
 }
