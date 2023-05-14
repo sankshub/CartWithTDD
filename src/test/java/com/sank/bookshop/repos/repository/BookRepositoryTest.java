@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -38,7 +39,13 @@ public class BookRepositoryTest {
         when(resource.getFile()).thenReturn(new File(this.getClass()
                                                          .getResource("/masterbookfeed.json")
                                                          .toURI()));
-        Assert.assertTrue(bookRepository.findAll()
-                                        .isEmpty());
+        Assert.assertTrue(bookRepository.findAll().isEmpty());
+    }
+
+    @Test
+    public void testReturnEmptyListDuringException() throws IOException {
+        when(resourceLoader.getResource(Mockito.anyString())).thenReturn(resource);
+        when(resource.getFile()).thenThrow(FileNotFoundException.class);
+        Assert.assertNotNull(bookRepository.findAll());
     }
 }

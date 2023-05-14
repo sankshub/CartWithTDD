@@ -21,8 +21,8 @@ public class BookRepository {
         try (FileReader reader = new FileReader(resource.getFile())) {
             return mapper.readValue(reader, new TypeReference<List<String>>() {
             });
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 }
