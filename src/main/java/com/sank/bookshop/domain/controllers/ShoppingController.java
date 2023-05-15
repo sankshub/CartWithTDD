@@ -1,8 +1,12 @@
 package com.sank.bookshop.domain.controllers;
 
+import com.sank.bookshop.domain.exceptions.ExceptionResponse;
 import com.sank.bookshop.domain.mappers.RequestResponseMapper;
 import com.sank.bookshop.domain.model.BookResponse;
 import com.sank.bookshop.services.service.BookService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,11 @@ public class ShoppingController {
     @Autowired
     BookService bookService;
 
+    @ApiOperation(value = "Get All Books", notes = "Returns all available books")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = BookResponse.class),
+            @ApiResponse(code = 404, message = "Not found - No books available right now"),
+            @ApiResponse(code = 500, message = "Internal server error", response = ExceptionResponse.class)})
     @GetMapping(value = "books", produces = "application/json")
     public HttpEntity<List<BookResponse>> getAllBooks() {
         return new HttpEntity<>(RequestResponseMapper.MAPPER.mapToBookModelList(bookService.findAll()));
