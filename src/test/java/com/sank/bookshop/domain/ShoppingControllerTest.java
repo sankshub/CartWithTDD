@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ShoppingControllerTest {
 
-    private String bookJson = "[{\"title\":\"Clean Code\",\"isbn\":\"123456789\",\"authorFullName\":\"Robert Martin\",\"yearOfPublish\":\"2008\",\"price\":\"50\"}]";
     Book cleanCodeBook = new Book();
     @Autowired
     private MockMvc mvc;
@@ -47,18 +46,19 @@ class ShoppingControllerTest {
     }
 
     @Test
-    void shouldGive200Response() throws Exception {
+    void shouldGet200ResponseForBookApi() throws Exception {
         when(bookService.findAll()).thenReturn(Collections.emptyList());
         mvc.perform(get("/api/books/"))
            .andExpect(status().isOk());
     }
 
     @Test
-    void shouldGetBookResponse() throws Exception {
+    void shouldGetBookAsJsonResponse() throws Exception {
         when(bookService.findAll()).thenReturn(Collections.singletonList(cleanCodeBook));
         when(requestResponseMapper.mapToBookModelList(Mockito.anyList())).thenCallRealMethod();
+        String cleanCodeBookJson = "[{\"title\":\"Clean Code\",\"isbn\":\"123456789\",\"authorFullName\":\"Robert Martin\",\"yearOfPublish\":\"2008\",\"price\":\"50\"}]";
         mvc.perform(get("/api/books/"))
            .andExpect(status().isOk())
-           .andExpect(content().string(bookJson));
+           .andExpect(content().string(cleanCodeBookJson));
     }
 }
