@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.sank.bookshop.services.validator.UniqueSetDiscountValidator.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class UniqueBasketOfBooksTest {
-    private static final String EMPTY_CART_ERROR = "Cart is Empty, add items and request again";
-    private static final String MINIMUM_BOOK_QUANTITY_ERROR = "Minimum 1 quantity required per order Check and request again";
     Book cleanCodeBook = new Book();
     Book legacyCodeBook = new Book();
     @InjectMocks
@@ -90,5 +90,17 @@ public class UniqueBasketOfBooksTest {
             uniqueSetOfBooks.applyDiscount(cartWithoutQuantity);
         });
         Assert.assertEquals(MINIMUM_BOOK_QUANTITY_ERROR, exception.getMessage());
+    }
+
+    @Test
+    public void calculateDiscountWithDuplicateBook() {
+        List<CartItem> items = new ArrayList<>();
+        items.add(new CartItem(cleanCodeBook, 2));
+        items.add(new CartItem(cleanCodeBook, 2));
+        ShoppingCart cartWithDuplicates = new ShoppingCart(items);
+        Exception exception = Assert.assertThrows(ShoppingCartException.class, () -> {
+            uniqueSetOfBooks.applyDiscount(cartWithDuplicates);
+        });
+        Assert.assertEquals(DUPLICATE_BOOK_ENTRY_ERROR, exception.getMessage());
     }
 }
