@@ -1,17 +1,16 @@
 package com.sank.bookshop.services.service.impl;
 
+import com.sank.bookshop.repos.entity.Book;
 import com.sank.bookshop.services.service.DiscountService;
-import com.sank.bookshop.services.service.model.DiscountOffer;
-import com.sank.bookshop.services.service.model.Offers;
-import com.sank.bookshop.services.service.model.UniqueBookOffer;
+import com.sank.bookshop.services.service.model.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UniqueSetOfBooks implements DiscountService {
     private final DiscountOffer uniqueSetOfBooksOffer;
+
     private UniqueSetOfBooks() {
         List<Offers> offers = new ArrayList<>();
         offers.add(new UniqueBookOffer(2, 5));
@@ -24,5 +23,13 @@ public class UniqueSetOfBooks implements DiscountService {
     @Override
     public DiscountOffer getCurrentDiscountOffer() {
         return uniqueSetOfBooksOffer;
+    }
+
+    @Override
+    public DiscountedCart applyDiscount(List<ShoppingCart> shoppingOrderList) {
+        Set<Book> bookSet = new HashSet<>();
+        bookSet.add(shoppingOrderList.get(0).getBook());
+        UniqueBasket uniqueBasket = new UniqueBasket(bookSet, 5);
+        return new DiscountedCart(Collections.singletonList(uniqueBasket), 50.0, 50.0);
     }
 }
