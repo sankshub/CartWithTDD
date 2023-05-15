@@ -1,12 +1,13 @@
 package com.sank.bookshop.services.service.model;
 
+
+import com.sank.bookshop.repos.entity.Book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
-public class ShoppingCart {
-    List<CartItem> items;
+public class CartItem {
+    private Book book;
+    private Integer quantity;
 }

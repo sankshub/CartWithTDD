@@ -28,10 +28,10 @@ public class UniqueSetOfBooks implements DiscountService {
     }
 
     @Override
-    public DiscountedCart applyDiscount(List<ShoppingCart> shoppingOrderList) {
-        validateShoppingCart(shoppingOrderList);
+    public DiscountedCart applyDiscount(ShoppingCart shoppingcart) {
+        validateShoppingCart(shoppingcart);
         Set<Book> bookSet = new HashSet<>();
-        bookSet.add(shoppingOrderList.get(0).getBook());
+        bookSet.add(shoppingcart.getItems().get(0).getBook());
         UniqueBasket uniqueBasket = new UniqueBasket(bookSet, 5);
         return new DiscountedCart(Collections.singletonList(uniqueBasket), 50.0, 50.0);
     }
