@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ShoppingControllerTest {
 
-    private String bookJson = "[{\"title\":\"Clean Code\",\"isbn\":\"123456789\",\"authorFullName\":null,\"yearOfPublish\":\"2008\",\"price\":\"50\"}]";
+    private String bookJson = "[{\"title\":\"Clean Code\",\"isbn\":\"123456789\",\"authorFullName\":\"Robert Martin\",\"yearOfPublish\":\"2008\",\"price\":\"50\"}]";
     Book cleanCodeBook = new Book();
     @Autowired
     private MockMvc mvc;
