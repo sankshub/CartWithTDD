@@ -1,4 +1,4 @@
-package com.sank.bookshop.services.service.model;
+package com.sank.bookshop.services.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

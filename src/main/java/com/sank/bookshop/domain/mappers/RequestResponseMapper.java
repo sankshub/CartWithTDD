@@ -4,7 +4,7 @@ import com.sank.bookshop.domain.model.BookResponse;
 import com.sank.bookshop.domain.model.CurrentOffer;
 import com.sank.bookshop.domain.model.Offers;
 import com.sank.bookshop.repos.entity.Book;
-import com.sank.bookshop.services.service.model.DiscountOffer;
+import com.sank.bookshop.services.model.DiscountOffer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -22,7 +22,7 @@ public interface RequestResponseMapper {
 
     CurrentOffer mapToCurrentOfferModel(DiscountOffer source);
 
-    @Mapping(target = "uniqueCopies", expression = "java(((com.sank.bookshop.services.service.model.UniqueBookOffer) source).getUniqueCopies())")
-    Offers mapToOffersModel(com.sank.bookshop.services.service.model.Offers source);
+    @Mapping(target = "uniqueCopies", expression = "java(((com.sank.bookshop.services.model.UniqueBookOffer) source).getUniqueCopies())")
+    Offers mapToOffersModel(com.sank.bookshop.services.model.Offers source);
 
 }

@@ -1,8 +1,8 @@
 package com.sank.bookshop.services.validator;
 
 import com.sank.bookshop.services.exception.ShoppingCartException;
-import com.sank.bookshop.services.service.model.CartItem;
-import com.sank.bookshop.services.service.model.ShoppingCart;
+import com.sank.bookshop.services.model.CartItem;
+import com.sank.bookshop.services.model.ShoppingCart;
 import org.springframework.util.CollectionUtils;
 
 import java.util.function.Function;
