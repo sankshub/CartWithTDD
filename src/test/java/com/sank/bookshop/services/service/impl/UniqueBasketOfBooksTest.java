@@ -2,6 +2,7 @@ package com.sank.bookshop.services.service.impl;
 
 import com.sank.bookshop.repos.entity.Author;
 import com.sank.bookshop.repos.entity.Book;
+import com.sank.bookshop.services.exception.ShoppingCartException;
 import com.sank.bookshop.services.service.model.DiscountedCart;
 import com.sank.bookshop.services.service.model.ShoppingCart;
 import org.junit.Assert;
@@ -16,6 +17,7 @@ import java.util.Collections;
 @RunWith(MockitoJUnitRunner.class)
 public class UniqueBasketOfBooksTest {
     Book cleanCodeBook = new Book();
+    private static final String EMPTY_CART_ERROR = "Cart is Empty, add items and request again";
     @InjectMocks
     UniqueSetOfBooks uniqueSetOfBooks;
 
@@ -45,5 +47,13 @@ public class UniqueBasketOfBooksTest {
                                         .get(0)
                                         .getBooks()
                                         .contains(cleanCodeBook));
+    }
+
+    @Test
+    public void shoppingCartShouldNotEmpty() {
+        Exception exception = Assert.assertThrows(ShoppingCartException.class, () -> {
+            uniqueSetOfBooks.applyDiscount(null);
+        });
+        Assert.assertEquals(EMPTY_CART_ERROR, exception.getMessage());
     }
 }

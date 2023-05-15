@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.sank.bookshop.services.validator.UniqueSetDiscountValidator.validateShoppingCart;
+
 @Service
 public class UniqueSetOfBooks implements DiscountService {
     private final DiscountOffer uniqueSetOfBooksOffer;
@@ -27,6 +29,7 @@ public class UniqueSetOfBooks implements DiscountService {
 
     @Override
     public DiscountedCart applyDiscount(List<ShoppingCart> shoppingOrderList) {
+        validateShoppingCart(shoppingOrderList);
         Set<Book> bookSet = new HashSet<>();
         bookSet.add(shoppingOrderList.get(0).getBook());
         UniqueBasket uniqueBasket = new UniqueBasket(bookSet, 5);
