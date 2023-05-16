@@ -1,5 +1,6 @@
 package com.sank.bookshop.domain.exceptions;
 
+import com.sank.bookshop.services.exception.BookNotFoundException;
 import com.sank.bookshop.services.exception.ShoppingCartException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,15 @@ public class OnlineShoppingResponseExceptionHandler extends ResponseEntityExcept
                 request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleNotFoundException(Exception bookNotFoundException,
+                                                                           WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),
+                bookNotFoundException.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }

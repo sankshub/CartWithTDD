@@ -3,6 +3,7 @@ package com.sank.bookshop.services.service.impl;
 import com.sank.bookshop.repos.entity.Author;
 import com.sank.bookshop.repos.entity.Book;
 import com.sank.bookshop.repos.repository.BookRepository;
+import com.sank.bookshop.services.exception.BookNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
+    private static final String BOOK_NOT_FOUND_ERROR = "Requested book not found/ISBN is null, Try again with valid ISBN ";
     @Mock
     BookRepository repository;
     @InjectMocks
@@ -40,5 +42,14 @@ public class BookServiceTest {
     public void findByIsbn() {
         when(repository.findAll()).thenReturn(Collections.singletonList(book));
         Assert.assertEquals(bookService.findByIsbn("123456789"), book);
+    }
+
+    @Test
+    public void findBookWithUnknownIsbn() {
+        when(repository.findAll()).thenReturn(Collections.emptyList());
+        Exception exception = Assert.assertThrows(BookNotFoundException.class, () -> {
+            bookService.findByIsbn("123456789");
+        });
+        Assert.assertEquals(BOOK_NOT_FOUND_ERROR, exception.getMessage());
     }
 }
