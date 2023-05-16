@@ -93,7 +93,7 @@ public class UniqueBasketOfBooksTest {
     }
 
     @Test
-    public void calculateDiscountWithDuplicateBook() {
+    public void shoppingCartShouldNotHaveAnyDuplicateBooks() {
         List<CartItem> items = new ArrayList<>();
         items.add(new CartItem(cleanCodeBook, 2));
         items.add(new CartItem(cleanCodeBook, 2));
@@ -102,5 +102,15 @@ public class UniqueBasketOfBooksTest {
             uniqueSetOfBooks.applyDiscount(cartWithDuplicates);
         });
         Assert.assertEquals(DUPLICATE_BOOK_ENTRY_ERROR, exception.getMessage());
+    }
+
+    @Test
+    public void shoppingCartSegricateCartItemsIntoBaskets() {
+        List<CartItem> items = new ArrayList<>();
+        items.add(new CartItem(cleanCodeBook, 2));
+        items.add(new CartItem(legacyCodeBook, 2));
+        ShoppingCart shoppingCart = new ShoppingCart(items);
+        DiscountedCart discountedCart = uniqueSetOfBooks.applyDiscount(shoppingCart);
+        Assert.assertEquals(2, discountedCart.getUniqueBasket().size());
     }
 }

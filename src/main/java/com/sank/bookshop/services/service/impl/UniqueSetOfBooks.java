@@ -6,11 +6,13 @@ import com.sank.bookshop.services.service.DiscountService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.sank.bookshop.services.validator.UniqueSetDiscountValidator.validateShoppingCart;
 
 @Service
 public class UniqueSetOfBooks implements DiscountService {
+    private static final Integer MINIMUM_BOOK_SET_SIZE = 1;
     private final DiscountOffer uniqueSetOfBooksOffer;
 
     private UniqueSetOfBooks() {
@@ -28,11 +30,65 @@ public class UniqueSetOfBooks implements DiscountService {
     }
 
     @Override
-    public DiscountedCart applyDiscount(ShoppingCart shoppingcart) {
-        validateShoppingCart(shoppingcart);
-        Set<Book> bookSet = new HashSet<>();
-        bookSet.add(shoppingcart.getItems().get(0).getBook());
-        UniqueBasket uniqueBasket = new UniqueBasket(bookSet, 5);
-        return new DiscountedCart(Collections.singletonList(uniqueBasket), 50.0, 50.0);
+    public DiscountedCart applyDiscount(ShoppingCart shoppingCart) {
+        validateShoppingCart(shoppingCart);
+        List<BasketBundle> bundleOfBaskets = processCartIntoBaskets(shoppingCart);
+        return new DiscountedCart(bundleOfBaskets.get(0).getBaskets(), 50.0, 50.0);
+    }
+
+    private List<BasketBundle> processCartIntoBaskets(ShoppingCart shoppingCart) {
+        List<BasketBundle> bundleBaskets = new ArrayList<>();
+        for (Integer currentBasketSize : getMaxBooksInAllCatageoriesToGetDiscount().descendingSet()) {
+            bundleBaskets.add(new BasketBundle(createPossibleBaskets(shoppingCart, currentBasketSize)));
+        }
+        return bundleBaskets;
+    }
+
+    private TreeSet<Integer> getMaxBooksInAllCatageoriesToGetDiscount() {
+        return uniqueSetOfBooksOffer.getOffers().stream().map(item -> ((UniqueBookOffer) item).getUniqueCopies())
+                                    .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    private List<UniqueBasket> createPossibleBaskets(ShoppingCart shoppingCart, Integer maxBasketSize) {
+        List<UniqueBasket> baskets = new ArrayList<>();
+        List<CartItem> remainingShoppingCartItems = cloneShoppingCartItems(shoppingCart);
+        TreeSet<Integer> maxSetSize = getMaxBooksInAllCatageoriesToGetDiscount();
+        maxSetSize.add(MINIMUM_BOOK_SET_SIZE);
+        while (!remainingShoppingCartItems.isEmpty()) {
+            maxSetSize.removeIf(integer -> integer > remainingShoppingCartItems.size() || integer > maxBasketSize);
+            Set<Book> setsOfDifferentBooks = createNextSet(remainingShoppingCartItems, maxSetSize.last());
+            baskets.add(new UniqueBasket(setsOfDifferentBooks, getDiscount(setsOfDifferentBooks.size())));
+        }
+        return baskets;
+    }
+
+    private List<CartItem> cloneShoppingCartItems(ShoppingCart shoppingCart) {
+        return shoppingCart.getItems().stream()
+                           .map(shoppingOrder -> new CartItem(shoppingOrder.getBook(), shoppingOrder.getQuantity()))
+                           .collect(Collectors.toList());
+    }
+
+    private Set<Book> createNextSet(List<CartItem> remainingCartItems, Integer maxSetSize) {
+        HashSet<Book> books = new HashSet<>();
+        for (CartItem item : new ArrayList<>(remainingCartItems)) {
+            books.add(item.getBook());
+            if (item.getQuantity() == 1)
+                remainingCartItems.remove(item);
+            else
+                item.changeQuantity(item.getQuantity() - 1);
+            if (books.size() == maxSetSize)
+                break;
+        }
+        return books;
+    }
+
+    private int getDiscount(int differentBooksCount) {
+        int defaultDiscount = 0;
+        Optional<Offers> bookOffer = uniqueSetOfBooksOffer.getOffers().stream()
+                                                          .filter(offer -> ((UniqueBookOffer) offer).getUniqueCopies() == differentBooksCount)
+                                                          .findFirst();
+        if (bookOffer.isPresent())
+            return bookOffer.get().getDiscount();
+        else return defaultDiscount;
     }
 }

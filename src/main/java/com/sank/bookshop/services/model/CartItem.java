@@ -10,4 +10,8 @@ import lombok.Data;
 public class CartItem {
     private Book book;
     private Integer quantity;
+
+    public void changeQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }
