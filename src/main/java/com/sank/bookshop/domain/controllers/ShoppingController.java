@@ -4,6 +4,8 @@ import com.sank.bookshop.domain.exceptions.ExceptionResponse;
 import com.sank.bookshop.domain.mappers.RequestResponseMapper;
 import com.sank.bookshop.domain.model.BookResponse;
 import com.sank.bookshop.domain.model.CurrentOffer;
+import com.sank.bookshop.domain.model.ProcessedCart;
+import com.sank.bookshop.domain.model.ShoppingCart;
 import com.sank.bookshop.services.service.BookService;
 import com.sank.bookshop.services.service.DiscountService;
 import io.swagger.annotations.ApiOperation;
@@ -11,9 +13,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
@@ -45,4 +45,15 @@ public class ShoppingController {
         return new HttpEntity<>(RequestResponseMapper.MAPPER.mapToCurrentOfferModel(discountService.getCurrentDiscountOffer()));
     }
 
+    @ApiOperation(value = "Process shopping cart with possible discount", notes = "Process shopping cart with possible discount and returns")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ProcessedCart.class),
+            @ApiResponse(code = 404, message = "Not found - No Discount found"),
+            @ApiResponse(code = 400, message = "Bad Request - Duplicate entries Found"),
+            @ApiResponse(code = 500, message = "Internal server error", response = ExceptionResponse.class)})
+    @PostMapping(value = "processDiscount", consumes = "application/json", produces = "application/json")
+    public HttpEntity<ProcessedCart> processDiscount(@RequestBody List<ShoppingCart> cart) {
+        com.sank.bookshop.services.model.ShoppingCart orders = RequestResponseMapper.MAPPER.mapToShoppingCartEntity(cart, bookService);
+        return new HttpEntity<>(RequestResponseMapper.MAPPER.mapToProcessedCartModel(discountService.applyDiscount(orders)));
+    }
 }
