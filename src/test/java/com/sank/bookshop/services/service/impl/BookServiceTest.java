@@ -2,7 +2,7 @@ package com.sank.bookshop.services.service.impl;
 
 import com.sank.bookshop.repos.entity.Author;
 import com.sank.bookshop.repos.entity.Book;
-import com.sank.bookshop.repos.repository.BookRepository;
+import com.sank.bookshop.repos.repository.BookWareHouse;
 import com.sank.bookshop.services.exception.BookNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class BookServiceTest {
     private static final String BOOK_NOT_FOUND_ERROR = "Requested book not found/ISBN is null, Try again with valid ISBN ";
     @Mock
-    BookRepository repository;
+    BookWareHouse repository;
     @InjectMocks
     BookServiceImpl bookService;
     Book book = new Book();

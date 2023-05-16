@@ -23,14 +23,14 @@ import java.util.Objects;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BookRepositoryTest {
+public class BookWareHouseTest {
     @Mock
     Resource resource;
     Book book = new Book();
     @Mock
     private ResourceLoader resourceLoader;
     @InjectMocks
-    private BookRepository bookRepository;
+    private BookWareHouse bookWareHouse;
 
     @Before
     public void setup() {
@@ -49,7 +49,7 @@ public class BookRepositoryTest {
     public void testAlwaysReturnsNonNull() throws IOException {
         when(resourceLoader.getResource(Mockito.anyString())).thenReturn(resource);
         when(resource.getFile()).thenReturn(new File("test"));
-        Assert.assertNotNull(bookRepository.findAll());
+        Assert.assertNotNull(bookWareHouse.findAll());
     }
 
     @Test
@@ -58,14 +58,14 @@ public class BookRepositoryTest {
         when(resource.getFile()).thenReturn(new File(Objects.requireNonNull(this.getClass()
                                                                                 .getResource("/masterbookfeed.json"))
                                                             .toURI()));
-        Assert.assertFalse(CollectionUtils.isEmpty(bookRepository.findAll()));
+        Assert.assertFalse(CollectionUtils.isEmpty(bookWareHouse.findAll()));
     }
 
     @Test
     public void testReturnEmptyListDuringException() throws IOException {
         when(resourceLoader.getResource(Mockito.anyString())).thenReturn(resource);
         when(resource.getFile()).thenThrow(FileNotFoundException.class);
-        Assert.assertNotNull(bookRepository.findAll());
+        Assert.assertNotNull(bookWareHouse.findAll());
     }
 
     @Test
@@ -74,6 +74,6 @@ public class BookRepositoryTest {
         when(resource.getFile()).thenReturn(new File(Objects.requireNonNull(this.getClass()
                                                                                 .getResource("/masterbookfeed.json"))
                                                             .toURI()));
-        Assert.assertTrue(bookRepository.findAll().contains(book));
+        Assert.assertTrue(bookWareHouse.findAll().contains(book));
     }
 }

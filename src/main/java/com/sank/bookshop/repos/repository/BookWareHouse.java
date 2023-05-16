@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class BookRepository {
+public class BookWareHouse {
     @Autowired
     private ResourceLoader resourceLoader;
 

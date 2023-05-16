@@ -1,5 +1,6 @@
-package com.sank.bookshop.domain.exceptions;
+package com.sank.bookshop.domain.config;
 
+import com.sank.bookshop.domain.model.ExceptionResponse;
 import com.sank.bookshop.services.exception.BookNotFoundException;
 import com.sank.bookshop.services.exception.ShoppingCartException;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-public class OnlineShoppingResponseExceptionHandler extends ResponseEntityExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleGenericExceptions(Exception exception, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), exception.getMessage(),

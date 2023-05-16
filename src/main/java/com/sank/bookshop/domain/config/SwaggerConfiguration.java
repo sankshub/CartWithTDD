@@ -16,7 +16,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
                                                       .apiInfo(metaInfo())
                                                       .select()
-                                                      .apis(RequestHandlerSelectors.basePackage("com.sank.bookshop.domain.controller"))
+                                                      .apis(RequestHandlerSelectors.basePackage("com.sank.bookshop.domain.controllers"))
                                                       .build();
     }
 
