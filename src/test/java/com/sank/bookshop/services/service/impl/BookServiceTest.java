@@ -52,4 +52,12 @@ public class BookServiceTest {
         });
         Assert.assertEquals(BOOK_NOT_FOUND_ERROR, exception.getMessage());
     }
+
+    @Test
+    public void findBookWithNull() {
+        Exception exception = Assert.assertThrows(BookNotFoundException.class, () -> {
+            bookService.findByIsbn(null);
+        });
+        Assert.assertEquals(BOOK_NOT_FOUND_ERROR, exception.getMessage());
+    }
 }
