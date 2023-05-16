@@ -32,8 +32,7 @@ public class UniqueSetOfBooks implements DiscountService {
     @Override
     public DiscountedCart applyDiscount(ShoppingCart shoppingCart) {
         validateShoppingCart(shoppingCart);
-        List<BasketBundle> bundleOfBaskets = processCartIntoBaskets(shoppingCart);
-        return new DiscountedCart(bundleOfBaskets.get(0).getBaskets(), 50.0, 50.0);
+        return selectBasketBundleWithMaxDiscount(processCartIntoBaskets(shoppingCart));
     }
 
     private List<BasketBundle> processCartIntoBaskets(ShoppingCart shoppingCart) {
@@ -91,4 +90,31 @@ public class UniqueSetOfBooks implements DiscountService {
             return bookOffer.get().getDiscount();
         else return defaultDiscount;
     }
+
+    private DiscountedCart selectBasketBundleWithMaxDiscount(List<BasketBundle> basketBundles) {
+        TreeMap<Double, DiscountedCart> combinationHashMap = new TreeMap<>();
+        for (BasketBundle basketBundle : basketBundles) {
+            DiscountedCart discountedCart = calculateDiscountAndGetDiscountedCart(basketBundle);
+            combinationHashMap.put(discountedCart.getTotalCostWithDiscount(), discountedCart);
+        }
+        return combinationHashMap.firstEntry().getValue();
+    }
+
+    private DiscountedCart calculateDiscountAndGetDiscountedCart(BasketBundle bundle) {
+        double pricePerBasket = 0.0;
+        double totalPriceOfBundle = 0.0;
+        double totalPriceOfBundleWithDiscount = 0.0;
+        for (UniqueBasket basket : bundle.getBaskets()) {
+            for (Book book : basket.getBooks()) {
+                pricePerBasket += Double.parseDouble(book.getPrice());
+                totalPriceOfBundle += Double.parseDouble(book.getPrice());
+            }
+            pricePerBasket = pricePerBasket * (1.0 - (basket.getDiscountApplied() / 100.0));
+            basket.setCostOfBasketWithDiscount(pricePerBasket);
+            totalPriceOfBundleWithDiscount += pricePerBasket;
+            pricePerBasket = 0;
+        }
+        return new DiscountedCart(bundle.getBaskets(), totalPriceOfBundle, totalPriceOfBundleWithDiscount);
+    }
+
 }
