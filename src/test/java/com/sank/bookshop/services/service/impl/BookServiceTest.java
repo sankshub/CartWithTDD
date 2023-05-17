@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
     private static final String BOOK_NOT_FOUND_ERROR = "Requested book not found/ISBN is null, Try again with valid ISBN ";
+    private static final String NO_BOOKS_ERROR = "No books available now, we will be back shortly ";
     @Mock
     BookWareHouse repository;
     @InjectMocks
@@ -39,7 +40,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void findByIsbn() {
+    public void findBookByIsbn() {
         when(repository.findAll()).thenReturn(Collections.singletonList(book));
         Assert.assertEquals(bookService.findByIsbn("123456789"), book);
     }
@@ -59,5 +60,13 @@ public class BookServiceTest {
             bookService.findByIsbn(null);
         });
         Assert.assertEquals(BOOK_NOT_FOUND_ERROR, exception.getMessage());
+    }
+
+    @Test
+    public void getAllBookDetailsShouldGiveException() {
+        Exception exception = Assert.assertThrows(BookNotFoundException.class, () -> {
+            bookService.findAll();
+        });
+        Assert.assertEquals(NO_BOOKS_ERROR, exception.getMessage());
     }
 }
