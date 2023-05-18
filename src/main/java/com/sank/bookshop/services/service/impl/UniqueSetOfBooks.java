@@ -37,6 +37,7 @@ public class UniqueSetOfBooks implements DiscountService {
 
     private List<BasketBundle> processCartIntoBaskets(ShoppingCart shoppingCart) {
         List<BasketBundle> bundleBaskets = new ArrayList<>();
+        shoppingCart.getItems().sort(Comparator.comparingDouble(CartItem::getBookPrice).reversed());
         for (Integer currentBasketSize : getMaxBooksInAllCatageoriesToGetDiscount().descendingSet()) {
             bundleBaskets.add(new BasketBundle(createPossibleBaskets(shoppingCart, currentBasketSize)));
         }

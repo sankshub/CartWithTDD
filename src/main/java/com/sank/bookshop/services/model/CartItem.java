@@ -14,4 +14,8 @@ public class CartItem {
     public void changeQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public Double getBookPrice() {
+        return Double.valueOf(getBook().getPrice());
+    }
 }

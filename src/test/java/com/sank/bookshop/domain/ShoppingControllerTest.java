@@ -8,7 +8,6 @@ import com.sank.bookshop.services.model.Offers;
 import com.sank.bookshop.services.model.UniqueBookOffer;
 import com.sank.bookshop.services.service.impl.BookServiceImpl;
 import com.sank.bookshop.services.service.impl.UniqueSetOfBooks;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ShoppingControllerTest {
 
-    Book cleanCodeBook = new Book();
-    private DiscountOffer uniqueSetOfBooksOffer;
     @Autowired
     private MockMvc mvc;
     @MockBean
@@ -40,23 +37,6 @@ class ShoppingControllerTest {
     private UniqueSetOfBooks discountService;
     @MockBean
     private RequestResponseMapperImpl requestResponseMapper;
-
-    @BeforeEach
-    public void setup() {
-        cleanCodeBook.setIsbn("123456789");
-        cleanCodeBook.setTitle("Clean Code");
-        Author cleanCodeBookAuthor = new Author();
-        cleanCodeBookAuthor.setFirstName("Robert");
-        cleanCodeBookAuthor.setMiddleName(null);
-        cleanCodeBookAuthor.setLastName("Martin");
-        cleanCodeBook.setAuthor(cleanCodeBookAuthor);
-        cleanCodeBook.setYearOfPublish("2008");
-        cleanCodeBook.setPrice("50");
-
-        List<Offers> offers = new ArrayList<>();
-        offers.add(new UniqueBookOffer(2, 5));
-        uniqueSetOfBooksOffer = new DiscountOffer("Buy different copies of books to get maximum discount!", offers);
-    }
 
     @Test
     void shouldGet200ResponseForBookApi() throws Exception {
@@ -67,8 +47,20 @@ class ShoppingControllerTest {
 
     @Test
     void shouldGetBookAsJsonResponse() throws Exception {
+        Book cleanCodeBook = new Book();
+        cleanCodeBook.setIsbn("123456789");
+        cleanCodeBook.setTitle("Clean Code");
+        Author cleanCodeBookAuthor = new Author();
+        cleanCodeBookAuthor.setFirstName("Robert");
+        cleanCodeBookAuthor.setMiddleName(null);
+        cleanCodeBookAuthor.setLastName("Martin");
+        cleanCodeBook.setAuthor(cleanCodeBookAuthor);
+        cleanCodeBook.setYearOfPublish("2008");
+        cleanCodeBook.setPrice("50");
+
         when(bookService.findAll()).thenReturn(Collections.singletonList(cleanCodeBook));
         when(requestResponseMapper.mapToBookModelList(Mockito.anyList())).thenCallRealMethod();
+
         String cleanCodeBookJson = "[{\"title\":\"Clean Code\",\"isbn\":\"123456789\",\"authorFullName\":\"Robert Martin\",\"yearOfPublish\":\"2008\",\"price\":\"50\"}]";
         mvc.perform(get("/api/books/"))
            .andExpect(status().isOk())
@@ -77,8 +69,14 @@ class ShoppingControllerTest {
 
     @Test
     void shouldGetOffersAsJsonResponse() throws Exception {
-        when(discountService.getCurrentDiscountOffer()).thenReturn(uniqueSetOfBooksOffer);
+        DiscountOffer uniqueSetOfBooksOffer;
+        List<Offers> offers = new ArrayList<>();
+        offers.add(new UniqueBookOffer(2, 5));
+        uniqueSetOfBooksOffer = new DiscountOffer("Buy different copies of books to get maximum discount!", offers);
         String cleanCodeBookJson = "{\"offerMessage\":\"Buy different copies of books to get maximum discount!\",\"offers\":[{\"uniqueCopies\":2,\"discount\":\"5\"}]}";
+
+        when(discountService.getCurrentDiscountOffer()).thenReturn(uniqueSetOfBooksOffer);
+
         mvc.perform(get("/api/discounts/"))
            .andExpect(status().isOk())
            .andExpect(content().string(cleanCodeBookJson));
