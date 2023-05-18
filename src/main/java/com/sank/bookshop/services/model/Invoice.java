@@ -5,8 +5,10 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 @AllArgsConstructor
-public class ShoppingCart {
-    List<CartItem> items;
+@Getter
+public class Invoice {
+    List<UniqueBooksSet> uniqueBooksSet;
+    Double totalCost;
+    Double totalCostWithDiscount;
 }

@@ -1,11 +1,10 @@
 package com.sank.bookshop.services.model;
 
 
-import com.sank.bookshop.repos.entity.Book;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class CartItem {
     private Book book;
@@ -15,7 +14,4 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Double getBookPrice() {
-        return Double.valueOf(getBook().getPrice());
-    }
 }
