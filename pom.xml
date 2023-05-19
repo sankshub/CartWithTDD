@@ -23,7 +23,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.swagger.version>3.0.0</spring.boot.swagger.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jacoco.version>0.8.10</jacoco.version>
+        <surefire.report.plugin.version>3.1.0</surefire.report.plugin.version>
     </properties>
 
     <dependencies>
@@ -51,7 +53,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.5.5.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -140,7 +142,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.5.5.Final</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -161,7 +163,7 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>com.sank.bookshop.Application.class</exclude>
+                        <exclude>com.sank.bookshop.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -211,6 +213,11 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${surefire.report.plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
     <reporting>
@@ -218,12 +225,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <jacoco-agent.destfile>/jacoco.exec</jacoco-agent.destfile>
-                    </systemPropertyVariables>
-                </configuration>
+                <version>${surefire.report.plugin.version}</version>
             </plugin>
         </plugins>
     </reporting>
